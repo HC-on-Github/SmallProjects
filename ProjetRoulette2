@@ -1,0 +1,82 @@
+class Programme
+{
+  static bool roulette(int nombre_joueur)
+  {
+    Random rd = new Random();
+    int rand_num = rd.Next(0,10);
+    if (rand_num <= nombre_joueur)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  static int gain(int mise_joueur, bool issue)
+  {
+    if (issue == true)
+    {
+      return mise_joueur * 2;
+    }
+    else
+    {
+      return mise_joueur / 2 ;
+    }
+  }
+
+  static int saisie ()
+  {
+    bool verif = true;
+    while (verif)
+    {
+      Console.WriteLine("Quelle est le chiffre sur lequel vous misez ?:");
+      const chiffre = Console.ReadLine();
+
+    }
+  }
+
+  static void Main(string[] args)
+  {
+    Console.WriteLine("Bienvenu sur le jeu de la roulette, entrer un nombre et on verra si vous avez gagné");
+    bool run = true;
+    
+    Console.Write("quelle est votre mise :");
+    int mise = Convert.ToInt32(Console.ReadLine());
+
+    while (run == true)
+    {
+      Console.Write("le chiffre sur lequel vous misez :");
+      int saisie = Convert.ToInt32(Console.ReadLine());
+      
+      if (roulette(saisie) == true)
+    {
+      Console.WriteLine("you won");
+      Console.WriteLine(" votre gain est de " + gain(mise,roulette(saisie)));
+    }
+      else
+    {
+      Console.WriteLine("you lost");
+      Console.WriteLine(" votre gain est de " + gain(mise,roulette(saisie)));
+    }
+
+    Console.WriteLine("voulez vous continuez ?:");
+    
+    switch (Console.ReadLine().ToUpper())
+    {
+      case "Y":
+        Console.WriteLine("Replaying ...");
+        break;
+      case "N":
+        Console.WriteLine("Arrêt du programme ...");
+        run = false;
+        break;
+      default:
+        Console.WriteLine("votre saisie n'est pas valide ...");
+        break;
+    }
+
+    }
+  }
+}
