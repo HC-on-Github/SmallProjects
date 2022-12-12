@@ -1,0 +1,85 @@
+/* Author : HellSan
+"ProjectC_" namespace : has 1 class (Roulette)
+*/
+
+using System;
+
+namespace ProjectC_
+{
+    class Roulette
+    {
+        static void Main(string[] args)
+        {
+            Rules();
+            bool Play = true;
+            int gamesPlayed = 0, gamesWon = 0;
+            while(Play==true)
+            {
+                bool win = Game();
+                gamesPlayed++;
+                if (win==true)
+                {
+                    gamesWon++;
+                }
+                Console.WriteLine("You won "+gamesWon+" game(s), and played "+gamesPlayed+" game(s).");
+                Console.WriteLine("Do you still want to play ? [Y/N]");
+                switch(Console.ReadLine().ToUpper())
+                {
+                    case "Y":
+                        Console.WriteLine("Replaying...");
+                        break;
+                    case "N":
+                        Play = false;
+                        break;
+                    default :
+                        Console.WriteLine("Please ensure to input a valid value.");
+                        break;
+                }
+            }
+        }
+
+        static int Random()
+        // Random method : Returns a random integer between 1 and 10
+        {
+            Random rnd = new Random();
+            int rando = rnd.Next(1, 10);
+            return rando;
+        }
+
+        static bool Game()
+        {
+            Console.WriteLine("Please input your bet (1-10)");
+            int bet = Convert.ToInt32(Console.ReadLine());
+            if (!(bet<11 && bet>0))
+                Console.WriteLine("Please input a valid value.");
+            else
+            {
+                int rando = Random();
+                if (bet == rando)
+                {
+                    Console.WriteLine("You won !");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("You lost ! The number was "+Convert.ToString(rando));
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        static void Rules()
+        // Prints the rules of the game
+        {
+            Console.WriteLine("=========================================");
+            Console.WriteLine(" - Epic Roulette C# Game by HellSan");
+            Console.WriteLine("=========================================");
+            Console.WriteLine("Rules ;");
+            Console.WriteLine("You have to enter an integer number between 0 and 10. Then if the roulette stops on your number, you win !");
+            
+            
+            
+        }
+    }
+}
