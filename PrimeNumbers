@@ -1,0 +1,89 @@
+/*
+Author : HellSan
+Class Prime_number has 1 main method + 4 methods :
+-Main
+-Prime_Formula, Factorial, is_prime, nth_prime
+*/
+
+using System;
+
+namespace C_
+{
+    class Prime_number
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Enter the rank of the desired prime number : ");
+            string input = Console.ReadLine();
+            int number = Convert.ToInt32(input);
+            // User Input
+
+            Console.WriteLine(nth_prime(number));
+            // Output of the number-th prime number
+        }
+
+        static decimal Prime_Formula(int n)
+        {
+            decimal d = Factorial(n-1);
+            decimal prime = (d+1)%n;
+            // Wilson's theorem's formula application
+
+            return prime;
+        }
+
+        static int Factorial(int n)
+        {
+            int fact = n;
+            while (n>1)
+            {
+                n--;
+                fact *= n;
+            }
+            // Calculation of the factorial of n
+
+            return fact;
+        }
+
+        static bool is_prime(int n)
+        {
+            /* This method returns
+            - False if n is 0 or not a prime number
+            - True if n is a prime number*/
+            
+            if (n == 0)
+            {
+                return false;
+            }
+            else if (Prime_Formula(n) == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        static int nth_prime(int n)
+        {
+            /* This method returns the nth prime number */
+        
+            int i = 2;
+            int array_slot = 0;
+            int[] prime_list = new int[n];
+            while (is_prime(prime_list[prime_list.Length-1]) == false)
+                {
+                    if (is_prime(i) == true)
+                    {
+                        prime_list[array_slot] = i;
+                        array_slot++;
+                    }
+                i++;
+                }
+
+
+            return prime_list[prime_list.Length-1];
+        }
+
+    }
+}
