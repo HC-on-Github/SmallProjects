@@ -1,0 +1,208 @@
+/* Author : HellSan && Tama
+"ProjectC_" namespace : has 1 class (Pendu)
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Data.SQLite;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace ProjectC_
+{
+    class Pendu
+    {
+        static void Main(string[] args)
+        {
+            SQLiteConnection sqlite_conn;
+            sqlite_conn = CreateConnection();
+            
+            string mot = ReadData(sqlite_conn);
+
+            Game(mot);
+        }
+        static int Random(SQLiteConnection conn)
+        // Random method : Returns a random integer between 1 and 10
+        {
+            Random rnd = new Random();
+            int rando = rnd.Next(1, cnt(conn));
+            return rando;
+        }
+
+        static string ReadData(SQLiteConnection conn)
+      {
+         SQLiteDataReader sqlite_datareader;
+         SQLiteCommand sqlite_cmd;
+         sqlite_cmd = conn.CreateCommand();
+         sqlite_cmd.CommandText = "SELECT * FROM Mot Where idMot = " + Random(conn);
+
+         
+
+         sqlite_datareader = sqlite_cmd.ExecuteReader();
+         
+         sqlite_datareader.Read();
+
+         string mot = "";
+         mot = sqlite_datareader.GetString(1);
+         
+         conn.Close();
+         return mot;
+      }
+        static SQLiteConnection CreateConnection()
+      {
+
+         SQLiteConnection sqlite_conn;
+         // Create a new database connection:
+         sqlite_conn = new SQLiteConnection("Data Source=mot.sqlite");
+         // Open the connection:
+         try
+         {
+            sqlite_conn.Open();
+         }
+         catch (Exception ex)
+         {
+
+         }
+         return sqlite_conn;
+      }
+      static int cnt(SQLiteConnection conn)
+      {
+         SQLiteDataReader sqlite_datareader;
+         SQLiteCommand sqlite_cmd;
+         sqlite_cmd = conn.CreateCommand();
+         sqlite_cmd.CommandText = "SELECT COUNT(*) FROM Mot";
+
+         int compter = 0; 
+
+         sqlite_datareader = sqlite_cmd.ExecuteReader();
+         sqlite_datareader.Read();
+
+         compter = sqlite_datareader.GetInt32(0);
+         return compter;
+      }
+
+        static void affichage(string word, char Guess, List<string> letter_Guessed)
+        {
+            string letter_write = "";
+            foreach (char i in word)
+            {
+                
+                string convert = i.ToString();
+                if (convert.ToUpper() ==  Guess.ToString())
+                {
+                    letter_Guessed.Add(Guess.ToString().ToUpper());
+                }
+                
+                if (letter_Guessed.Contains(convert.ToUpper()) == true)
+                {
+                    for (int a = 0; a < letter_Guessed.Count; a++)
+                    {
+                        if (letter_Guessed[a].ToUpper() == convert.ToUpper())
+                        {
+                            letter_write = letter_Guessed[a].ToUpper();
+                            
+                        }
+                    }
+                    Console.Write(letter_write + " ");
+                    
+                }
+                else
+                {
+                    Console.Write(" _ ");
+                }
+
+            }
+            
+        
+        }
+        static void Rules()
+        // Prints the rules of the game
+        {
+            Console.WriteLine("=========================================");
+            Console.WriteLine(" Hangman Game by HellSan and Tama- C#");
+            Console.WriteLine("=========================================");
+            Console.WriteLine("Rules ;");
+            Console.WriteLine("/");
+        }
+
+        static char[] ToArray(string word)
+        // Return true or false if the letter is in the word
+        {
+            char[] wordArray = new char[word.Length];
+            for (int i = 0; i < word.Length; i++)
+            {
+                bool isIn = Array.Exists( wordArray, element => element == word.ToUpper()[i]);
+                if (!(isIn)) {
+                wordArray[i] = word.ToUpper()[i];
+                }
+
+            }
+            return wordArray;
+        }
+
+        static void Game(string word)
+        {
+            int lives = 5;
+            Rules();
+
+            char[] arrayWord = ToArray(word);
+            char[] alreadyGuessed = new char[arrayWord.Length];
+
+            int whereGuessed = 0;
+            List<string> letterGuessed = new List<string>();
+            
+            bool hasBeenGuessed = false;
+            
+            while (lives>0 && hasBeenGuessed==false)
+            {
+                hasBeenGuessed = arrayWord.OrderBy(a => a).SequenceEqual(alreadyGuessed.OrderBy(a => a));
+                
+                Console.WriteLine("You have {0} lives",lives);
+                
+                Console.WriteLine("Input your guess :");
+
+                char Guess = Console.ReadLine().ToUpper().ToCharArray()[0];
+
+                affichage(word, Guess, letterGuessed);
+                bool exists = Array.Exists( arrayWord, element => element == Guess);
+                
+                if (exists)
+                {
+                    bool already = Array.Exists(alreadyGuessed, element => element == Guess);
+                    if (already) 
+                    {
+                        Console.WriteLine("You already guessed this letter !..");
+                    } else 
+                    {
+                        Console.WriteLine("Good guess !");
+                        alreadyGuessed[whereGuessed] = Guess;
+
+                        foreach (char i in word)
+                        {
+                            string convert = i.ToString();
+                            
+                            if (convert.ToUpper() == Guess.ToString())
+                            {
+                                whereGuessed++ ;
+                            }
+                        }
+                    }
+                } else
+                {
+                    Console.WriteLine("Wrong guess !");
+                    lives--;
+                }
+                if (whereGuessed == word.Length)
+                {
+                    Console.WriteLine("vous avez gagné");
+                    break;
+                }
+            }
+        }
+
+    }
+}
+
+
